@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Mitra – SPPW</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #1a56db;
+            --primary-light: #e8f0fe;
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+            --bg: #f0f4ff;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 24px rgba(26,86,219,0.10);
+            --row-hover: #f8faff;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 24px 20px;
+            color: var(--text);
+        }
+
+
+
+        /* ── PAGE ── */
+        .page {
+            max-width: 1100px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .page-header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.4px;
+        }
+        .page-header p {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(26,86,219,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(26,86,219,0.4); }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 3px 10px rgba(22,163,74,0.25);
+        }
+        .btn-success:hover { background: #15803d; transform: translateY(-1px); }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+        }
+        .btn-outline:hover { background: var(--primary-light); }
+
+        .btn-danger-outline {
+            background: white;
+            color: var(--danger);
+            border: 1.5px solid #fca5a5;
+        }
+        .btn-danger-outline:hover { background: var(--danger-light); border-color: var(--danger); }
+
+        .btn-sm {
+            padding: 5px 11px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+        .btn-icon {
+            width: 32px; height: 32px;
+            padding: 0;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        /* ── STATS STRIP ── */
+        .stats-strip {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+        .stat-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .stat-icon.blue { background: var(--primary-light); }
+        .stat-icon.green { background: var(--success-light); }
+        .stat-icon.yellow { background: var(--warning-light); }
+        .stat-num {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* ── TABLE CARD ── */
+        .table-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 8px 12px 8px 36px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: #f8faff;
+            transition: all 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(26,86,219,0.08);
+        }
+        .search-icon {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        thead {
+            background: #f8faff;
+            border-bottom: 2px solid var(--border);
+        }
+        thead th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+        thead th.th-no { width: 48px; text-align: center; }
+        thead th.th-actions { width: 130px; text-align: center; }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: var(--row-hover); }
+
+        tbody td {
+            padding: 13px 16px;
+            vertical-align: top;
+        }
+        td.td-no { text-align: center; color: var(--muted); font-size: 12px; font-weight: 600; }
+        td.td-nama { font-weight: 700; color: var(--text); }
+        td.td-alamat { color: var(--muted); line-height: 1.5; white-space: pre-line; }
+        td.td-type { }
+        td.td-actions { text-align: center; }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .badge-builtin { background: var(--primary-light); color: var(--primary); }
+        .badge-custom { background: var(--success-light); color: var(--success); }
+
+        .action-btns { display: flex; gap: 6px; justify-content: center; }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+        .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+        .empty-state p { font-size: 14px; }
+
+        .table-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--muted);
+            background: #fafbff;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            width: 440px;
+            max-width: 95vw;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: modalIn 0.2s ease;
+        }
+        @keyframes modalIn {
+            from { transform: scale(0.93); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .modal-header h3 { font-size: 16px; font-weight: 700; }
+        .btn-close {
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: var(--border);
+            color: var(--muted);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .btn-close:hover { background: var(--danger-light); color: var(--danger); }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: #fafbff;
+            transition: all 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(26,86,219,0.08);
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+        /* ── TOAST ── */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 2000;
+        }
+        .toast {
+            background: var(--text);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: toastIn 0.3s ease;
+            max-width: 320px;
+        }
+        .toast.success { background: var(--success); }
+        .toast.danger  { background: var(--danger); }
+        @keyframes toastIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to   { transform: translateX(0);    opacity: 1; }
+        }
+
+        /* ── CONFIRM MODAL ── */
+        .confirm-box {
+            width: 360px;
+            max-width: 95vw;
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: modalIn 0.2s ease;
+        }
+        .confirm-box .icon { font-size: 36px; margin-bottom: 12px; }
+        .confirm-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .confirm-box p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+        /* Import info box */
+        .info-box {
+            background: var(--primary-light);
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--primary);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+
+        /* ── TABS ── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: white;
+            border-radius: 12px;
+            padding: 6px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            width: fit-content;
+        }
+        .tab-btn {
+            padding: 9px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--muted);
+            background: transparent;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(26,86,219,0.3);
+        }
+        .tab-btn:not(.active):hover { background: var(--primary-light); color: var(--primary); }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── HISTORY TABLE ── */
+        .history-stats { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+        td.td-noSurat { font-weight: 700; color: var(--primary); font-size: 12px; }
+        td.td-tgl { white-space: nowrap; color: var(--muted); font-size: 12px; }
+        td.td-mitra { font-weight: 600; font-size: 12px; }
+        td.td-customer { font-size: 12px; color: var(--muted); }
+        td.td-so { font-size: 12px; font-weight: 600; }
+
+        @media (max-width: 600px) {
+            .page { padding: 0 12px; }
+            .topnav { padding: 0 16px; }
+            .stats-strip { gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+<!-- PAGE -->
+<div class="page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+                <h1>🗄️ Database SPPW</h1>
+                <p>Kelola mitra & riwayat surat SPPW</p>
+        </div>
+        <div class="header-actions" id="mitraActions">
+            <button class="btn btn-outline" onclick="exportCSV()">⬇️ Export CSV</button>
+            <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">⬆️ Import CSV</button>
+            <input type="file" id="importFile" accept=".csv" style="display:none" onchange="importCSV(event)">
+            <button class="btn btn-primary" onclick="bukaModalTambah()">＋ Tambah Mitra</button>
+        </div>
+        <div class="header-actions" id="historyActions" style="display:none">
+            <button class="btn btn-danger-outline btn-sm" onclick="hapusSemuaHistory()">🗑️ Hapus Semua History</button>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('mitra')">🏢 Database Mitra</button>
+        <button class="tab-btn" onclick="switchTab('history')">📋 History SPPW</button>
+    </div>
+
+    <!-- TAB: MITRA -->
+    <div class="tab-panel active" id="tab-mitra">
+        <!-- Stats -->
+        <div class="stats-strip">
+            <div class="stat-card">
+                <div class="stat-icon blue">🏢</div>
+                <div>
+                    <div class="stat-num" id="statTotal">0</div>
+                    <div class="stat-label">Total Mitra</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">✅</div>
+                <div>
+                    <div class="stat-num" id="statBuiltin">0</div>
+                    <div class="stat-label">Mitra Bawaan</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon yellow">⭐</div>
+                <div>
+                    <div class="stat-num" id="statCustom">0</div>
+                    <div class="stat-label">Mitra Kustom</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="table-card">
+            <div class="table-toolbar">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Cari nama atau alamat mitra..." oninput="renderTable()">
+                </div>
+                <button class="btn btn-danger-outline btn-sm" onclick="hapusSemuaCustom()" id="btnHapusCustom" style="display:none">🗑️ Hapus Semua Kustom</button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="th-no">No</th>
+                            <th>Nama Mitra</th>
+                            <th>Alamat</th>
+                            <th>Tipe</th>
+                            <th class="th-actions">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+                <div id="emptyState" class="empty-state" style="display:none">
+                    <div class="emoji">🔍</div>
+                    <p>Tidak ada mitra yang cocok dengan pencarian.</p>
+                </div>
+            </div>
+
+            <div class="table-footer">
+                <span id="footerInfo">Menampilkan 0 mitra</span>
+                <span style="color: var(--primary); font-weight: 600;">Data tersimpan otomatis di browser</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: HISTORY -->
+    <div class="tab-panel" id="tab-history">
+        <div class="stats-strip history-stats">
+            <div class="stat-card">
+                <div class="stat-icon blue">📋</div>
+                <div>
+                    <div class="stat-num" id="statHistory">0</div>
+                    <div class="stat-label">Total Surat Dibuat</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">📅</div>
+                <div>
+                    <div class="stat-num" id="statHistoryBulanIni">0</div>
+                    <div class="stat-label">Bulan Ini</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <div class="table-toolbar">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchHistory" placeholder="Cari nomor surat, mitra, customer..." oninput="renderHistory()">
+                </div>
+                <select id="filterBulan" onchange="renderHistory()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);background:white;cursor:pointer;">
+                    <option value="">📅 Semua Bulan</option>
+                </select>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="th-no">No</th>
+                            <th>Dibuat</th>
+                            <th>No. Surat</th>
+                            <th>Mitra</th>
+                            <th>Customer</th>
+                            <th>No. SO/PA</th>
+                            <th class="th-actions">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody"></tbody>
+                </table>
+                <div id="historyEmpty" class="empty-state" style="display:none">
+                    <div class="emoji">📭</div>
+                    <p>Belum ada history surat. Buat surat di Generator lalu klik Generate!</p>
+                </div>
+            </div>
+
+            <div class="table-footer">
+                <span id="historyFooterInfo">Belum ada data</span>
+                <span style="color: var(--primary); font-weight: 600;">Tersimpan otomatis saat Generate Surat</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Modal Tambah / Edit -->
+<div class="modal-overlay" id="modalForm" onclick="tutupModalJikaOverlay(event, 'modalForm')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalTitle">➕ Tambah Mitra Baru</h3>
+            <button class="btn-close" onclick="tutupModal('modalForm')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Nama Mitra <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="formNama" placeholder="Contoh: PT. NAMA PERUSAHAAN">
+        </div>
+        <div class="form-group">
+            <label>Alamat Mitra</label>
+            <textarea id="formAlamat" placeholder="Jl. ...&#10;Kota 00000"></textarea>
+        </div>
+        <input type="hidden" id="formEditIdx" value="">
+        <div class="modal-actions">
+            <button class="btn btn-primary" style="flex:1" onclick="simpanMitra()">💾 Simpan</button>
+            <button class="btn btn-outline" style="flex:1" onclick="tutupModal('modalForm')">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div class="modal-overlay" id="modalKonfirmasi" onclick="tutupModalJikaOverlay(event, 'modalKonfirmasi')">
+    <div class="confirm-box">
+        <div class="icon">⚠️</div>
+        <h3>Hapus Mitra?</h3>
+        <p id="konfirmasiPesan">Aksi ini tidak bisa dibatalkan.</p>
+        <div class="modal-actions" style="margin-top:20px">
+            <button class="btn btn-danger-outline" style="flex:1" onclick="konfirmasiHapus()">🗑️ Hapus</button>
+            <button class="btn btn-outline" style="flex:1" onclick="tutupModal('modalKonfirmasi')">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Import -->
+<div class="modal-overlay" id="modalImport" onclick="tutupModalJikaOverlay(event, 'modalImport')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>⬆️ Import CSV</h3>
+            <button class="btn-close" onclick="tutupModal('modalImport')">✕</button>
+        </div>
+        <div class="info-box">
+            Format CSV: <strong>nama,alamat</strong><br>
+            Baris pertama adalah header (akan dilewati).<br>
+            Contoh:<br>
+            <code>nama,alamat</code><br>
+            <code>PT. CONTOH,"Jl. Contoh No. 1, Kota"</code>
+        </div>
+        <p id="importPreviewText" style="font-size:13px;color:var(--muted);margin-bottom:16px"></p>
+        <div class="modal-actions">
+            <button class="btn btn-primary" style="flex:1" id="btnImportSimpan" onclick="konfirmasiImport()">✅ Import Sekarang</button>
+            <button class="btn btn-outline" style="flex:1" onclick="tutupModal('modalImport')">Batal</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// DATA BUILT-IN (25 mitra dari template doc)
+// ============================================================
+const BUILTIN_MITRA = [
+    { nama: "CV ARINDO PERSADA",               alamat: "Jl. Raya Sawangan Parung Bingung No. 1\nDepok 00000" },
+    { nama: "CV. Tritunggal Inti Perkasa",     alamat: "Jl. Ranjau No 10 Sumur Batu, Kemayoran\nJakarta 00000" },
+    { nama: "CV. Dwitunggal Mandiri",          alamat: "Jl. Karonsih Timur Raya II 30\nNgaliyan, Semarang 50181" },
+    { nama: "Koperasi INTI",                   alamat: "Jl. Moch Toha 77\nBandung 40523" },
+    { nama: "PT. KAHANA SUBHIKSA RAHARDJA",    alamat: "Jl. Batu Api II 12\nBandung 40264" },
+    { nama: "PT. Karyadata Komunika",          alamat: "Jl. Bukit Cinere Raya No.145B RT041/RW06\nDepok 16512" },
+    { nama: "PT. MEKA PRIMA PRATAMA",          alamat: "Jl. Deleg 11\nBandung 40262" },
+    { nama: "PT. PINISI ELEKTRA",              alamat: "Komp. Royal View Residence 10B\nBandung 40559" },
+    { nama: "PT SARANA PRIMA SOLUSI INDONESIA",alamat: "Jl. Sekemala Paledang Komplek Sahmi Village No. A-1, Ujung Berung\nKota Bandung, Jawa Barat 40617" },
+    { nama: "PT. INTI KONTEN INDONESIA",       alamat: "Jl. Moch Toha 77, Cigelereng\nKota Bandung 40243" },
+    { nama: "PT. Fajar Timur Teknologi",       alamat: "Jl. RS Fatmawati 39\nJakarta 12150" },
+    { nama: "PT. FIKAWAN UTAMA",               alamat: "Jl. Perumnas Bumi Teluk Jambe\nKabupaten Bandung" },
+    { nama: "PT. Gerbang Sinergi Prima",       alamat: "Jl. Cikutra No. 219\nBandung 40124" },
+    { nama: "PT. GLOBAL OPTIMA ABADI",         alamat: "Jl. Sultan Iskandar Muda No. 15\nJakarta Selatan" },
+    { nama: "PT. GLOBAL TITAN OPTIMA",         alamat: "Jl. Merak Raya D4 7A RT 6 RW 5\nTangerang 15145" },
+    { nama: "PT. HASEADO INFRATEK INDONESIA",  alamat: "Jl. Martanegara, Lengkong, Bandung No.56\nJawa Barat 40265" },
+    { nama: "PT. INDOHADETAMA",                alamat: "Jl. Situ Tarate I 1\nKabupaten Bandung 40239" },
+    { nama: "PT. MITRA SINERGI ADHITAMA",      alamat: "Jl. Ciputat Raya No. 14F RT006/RW01\nJakarta Selatan 12310" },
+    { nama: "PT. NARATAS SINERGI SOLUSINDO",   alamat: "Jl. Pinus Raya No 29\nBandung" },
+    { nama: "PT. OLIVIA INDAH",                alamat: "Komp. Masnaga Jl. Tangkuban Perahu No.A/68, Jakasampurna\nBekasi 00000" },
+    { nama: "PT. PERMATA ADI NUSA",            alamat: "Jl. Sepakat 1 RT 007 RW 001 No. 58\nJakarta Timur 13860" },
+    { nama: "PT. Simbika Teknologi Solusi",    alamat: "Jl. Bukit Cinere Raya Kav. 145C\nGandul Cinere 16512" },
+    { nama: "PT. SINAR BARU RAJAWALI",         alamat: "Jl. Kecapi 20\nBandung 40264" },
+    { nama: "PT. TRIMITRA KOLABORASI MANDIRI", alamat: "Premier Park 2 Blok AA 10\nTangerang 15117" },
+    { nama: "PT. Tunas Zeta Utama",            alamat: "Jl. Permata Taman Sari Raya Kav F2\nBandung 40293" }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let allMitra = [];       // semua mitra (builtin + custom)
+let pendingHapusIdx = null;
+let pendingImportData = null;
+
+// ============================================================
+// LOAD & SAVE
+// ============================================================
+function loadMitra() {
+    // Start with builtin
+    allMitra = BUILTIN_MITRA.map(m => ({ ...m, isBuiltin: true }));
+
+    // Merge custom from localStorage
+    try {
+        const saved = localStorage.getItem('sppw_mitra_custom');
+        if (saved) {
+            const custom = JSON.parse(saved);
+            custom.forEach(m => {
+                if (!allMitra.find(x => x.nama === m.nama)) {
+                    allMitra.push({ nama: m.nama, alamat: m.alamat || '', isBuiltin: false });
+                }
+            });
+        }
+    } catch(e) {}
+
+    allMitra.sort((a, b) => a.nama.localeCompare(b.nama));
+}
+
+function saveMitra() {
+    const custom = allMitra.filter(m => !m.isBuiltin).map(({ nama, alamat }) => ({ nama, alamat }));
+    localStorage.setItem('sppw_mitra_custom', JSON.stringify(custom));
+    // Also save full list for index.html dropdown sync
+    localStorage.setItem('sppw_mitra_custom', JSON.stringify(custom));
+}
+
+// ============================================================
+// RENDER TABLE
+// ============================================================
+function renderTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const tbody = document.getElementById('tableBody');
+    const empty = document.getElementById('emptyState');
+
+    const filtered = allMitra.filter(m =>
+        m.nama.toLowerCase().includes(q) || (m.alamat || '').toLowerCase().includes(q)
+    );
+
+    // Stats
+    const totalBuiltin = allMitra.filter(m => m.isBuiltin).length;
+    const totalCustom  = allMitra.filter(m => !m.isBuiltin).length;
+    document.getElementById('statTotal').textContent   = allMitra.length;
+    document.getElementById('statBuiltin').textContent = totalBuiltin;
+    document.getElementById('statCustom').textContent  = totalCustom;
+    document.getElementById('btnHapusCustom').style.display = totalCustom > 0 ? '' : 'none';
+    document.getElementById('footerInfo').textContent = q
+        ? `Menampilkan ${filtered.length} dari ${allMitra.length} mitra`
+        : `Menampilkan ${allMitra.length} mitra`;
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = '';
+        return;
+    }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = filtered.map((m, i) => {
+        const realIdx = allMitra.indexOf(m);
+        const alamatDisplay = (m.alamat || '–').replace(/\n/g, '\n');
+        const badge = m.isBuiltin
+            ? '<span class="badge badge-builtin">Bawaan</span>'
+            : '<span class="badge badge-custom">Kustom</span>';
+
+        const editBtn = `<button class="btn btn-outline btn-sm btn-icon" onclick="bukaModalEdit(${realIdx})" title="Edit">✏️</button>`;
+        const hapusBtn = m.isBuiltin
+            ? `<button class="btn btn-sm btn-icon" style="background:#f1f5f9;color:#cbd5e1;cursor:not-allowed" title="Mitra bawaan tidak bisa dihapus" disabled>🗑️</button>`
+            : `<button class="btn btn-danger-outline btn-sm btn-icon" onclick="konfirmasiHapusMitra(${realIdx})" title="Hapus">🗑️</button>`;
+
+        return `<tr>
+            <td class="td-no">${i + 1}</td>
+            <td class="td-nama">${escHtml(m.nama)}</td>
+            <td class="td-alamat">${escHtml(m.alamat || '–')}</td>
+            <td class="td-type">${badge}</td>
+            <td class="td-actions"><div class="action-btns">${editBtn}${hapusBtn}</div></td>
+        </tr>`;
+    }).join('');
+}
+
+function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ============================================================
+// MODAL TAMBAH
+// ============================================================
+function bukaModalTambah() {
+    document.getElementById('modalTitle').textContent = '➕ Tambah Mitra Baru';
+    document.getElementById('formNama').value = '';
+    document.getElementById('formAlamat').value = '';
+    document.getElementById('formEditIdx').value = '';
+    bukaModal('modalForm');
+    setTimeout(() => document.getElementById('formNama').focus(), 150);
+}
+
+// ============================================================
+// MODAL EDIT
+// ============================================================
+function bukaModalEdit(idx) {
+    const m = allMitra[idx];
+    document.getElementById('modalTitle').textContent = '✏️ Edit Mitra';
+    document.getElementById('formNama').value = m.nama;
+    document.getElementById('formAlamat').value = m.alamat || '';
+    document.getElementById('formEditIdx').value = idx;
+    bukaModal('modalForm');
+    setTimeout(() => document.getElementById('formNama').focus(), 150);
+}
+
+// ============================================================
+// SIMPAN (tambah / edit)
+// ============================================================
+function simpanMitra() {
+    const nama   = document.getElementById('formNama').value.trim();
+    const alamat = document.getElementById('formAlamat').value.trim();
+    const editIdx = document.getElementById('formEditIdx').value;
+
+    if (!nama) {
+        toast('⚠️ Nama mitra wajib diisi!', 'danger');
+        document.getElementById('formNama').focus();
+        return;
+    }
+
+    if (editIdx !== '') {
+        // Edit mode
+        const idx = parseInt(editIdx);
+        allMitra[idx].nama   = nama;
+        allMitra[idx].alamat = alamat;
+        // jika edit builtin, tandai jadi kustom juga (override)
+        // actually keep isBuiltin as-is, just update values
+        toast('✅ Data mitra berhasil diperbarui!', 'success');
+    } else {
+        // Tambah baru
+        if (allMitra.find(m => m.nama.toLowerCase() === nama.toLowerCase())) {
+            toast('⚠️ Mitra dengan nama ini sudah ada!', 'danger');
+            return;
+        }
+        allMitra.push({ nama, alamat, isBuiltin: false });
+        allMitra.sort((a, b) => a.nama.localeCompare(b.nama));
+        toast('✅ Mitra baru berhasil ditambahkan!', 'success');
+    }
+
+    saveMitra();
+    renderTable();
+    tutupModal('modalForm');
+}
+
+// ============================================================
+// HAPUS SATU
+// ============================================================
+function konfirmasiHapusMitra(idx) {
+    pendingHapusIdx = idx;
+    const m = allMitra[idx];
+    document.getElementById('konfirmasiPesan').textContent = `Hapus "${m.nama}"? Aksi ini tidak bisa dibatalkan.`;
+    bukaModal('modalKonfirmasi');
+}
+
+function konfirmasiHapus() {
+    if (pendingHapusIdx === null) return;
+    const nama = allMitra[pendingHapusIdx].nama;
+    allMitra.splice(pendingHapusIdx, 1);
+    pendingHapusIdx = null;
+    saveMitra();
+    renderTable();
+    tutupModal('modalKonfirmasi');
+    toast(`🗑️ "${nama}" berhasil dihapus.`, 'success');
+}
+
+// ============================================================
+// HAPUS SEMUA KUSTOM
+// ============================================================
+function hapusSemuaCustom() {
+    const count = allMitra.filter(m => !m.isBuiltin).length;
+    if (!count) return;
+    pendingHapusIdx = 'custom_all';
+    document.getElementById('konfirmasiPesan').textContent = `Hapus semua ${count} mitra kustom? Mitra bawaan tetap aman.`;
+    bukaModal('modalKonfirmasi');
+}
+
+// Override konfirmasiHapus for bulk delete
+const _origKonfirmasi = konfirmasiHapus;
+window.konfirmasiHapus = function() {
+    if (pendingHapusIdx === 'custom_all') {
+        allMitra = allMitra.filter(m => m.isBuiltin);
+        pendingHapusIdx = null;
+        saveMitra();
+        renderTable();
+        tutupModal('modalKonfirmasi');
+        toast('🗑️ Semua mitra kustom berhasil dihapus.', 'success');
+        return;
+    }
+    _origKonfirmasi();
+};
+
+// ============================================================
+// EXPORT CSV
+// ============================================================
+function exportCSV() {
+    const rows = [['nama', 'alamat', 'tipe']];
+    allMitra.forEach(m => {
+        rows.push([
+            `"${(m.nama || '').replace(/"/g, '""')}"`,
+            `"${(m.alamat || '').replace(/"/g, '""').replace(/\n/g, ' | ')}"`,
+            m.isBuiltin ? 'bawaan' : 'kustom'
+        ]);
+    });
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `database_mitra_sppw_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    toast('⬇️ File CSV berhasil diunduh!', 'success');
+}
+
+// ============================================================
+// IMPORT CSV
+// ============================================================
+function importCSV(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    event.target.value = '';
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const text = e.target.result;
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+        if (lines.length < 2) {
+            toast('⚠️ File CSV kosong atau tidak valid.', 'danger');
+            return;
+        }
+
+        // Skip header row
+        const dataLines = lines.slice(1);
+        const parsed = [];
+
+        dataLines.forEach(line => {
+            // Simple CSV parse (handles quoted fields)
+            const cols = parseCSVLine(line);
+            if (cols.length >= 1 && cols[0].trim()) {
+                parsed.push({
+                    nama:  cols[0].trim(),
+                    alamat: (cols[1] || '').trim().replace(/ \| /g, '\n'),
+                    isBuiltin: false
+                });
+            }
+        });
+
+        if (parsed.length === 0) {
+            toast('⚠️ Tidak ada data valid di file CSV.', 'danger');
+            return;
+        }
+
+        pendingImportData = parsed;
+        document.getElementById('importPreviewText').textContent =
+            `Ditemukan ${parsed.length} baris data. Data yang sudah ada akan dilewati (berdasarkan nama).`;
+        bukaModal('modalImport');
+    };
+    reader.readAsText(file, 'UTF-8');
+}
+
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+            if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+            else { inQuotes = !inQuotes; }
+        } else if (ch === ',' && !inQuotes) {
+            result.push(current); current = '';
+        } else {
+            current += ch;
+        }
+    }
+    result.push(current);
+    return result;
+}
+
+function konfirmasiImport() {
+    if (!pendingImportData) return;
+    let added = 0;
+    pendingImportData.forEach(m => {
+        if (!allMitra.find(x => x.nama.toLowerCase() === m.nama.toLowerCase())) {
+            allMitra.push(m);
+            added++;
+        }
+    });
+    allMitra.sort((a, b) => a.nama.localeCompare(b.nama));
+    pendingImportData = null;
+    saveMitra();
+    renderTable();
+    tutupModal('modalImport');
+    toast(`✅ Berhasil import ${added} mitra baru!`, 'success');
+}
+
+// ============================================================
+// MODAL HELPERS
+// ============================================================
+function bukaModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+function tutupModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+function tutupModalJikaOverlay(e, id) {
+    if (e.target === document.getElementById(id)) tutupModal(id);
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg, type = '') {
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.textContent = msg;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+}
+
+// ============================================================
+// KEYBOARD SHORTCUT
+// ============================================================
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        ['modalForm','modalKonfirmasi','modalImport'].forEach(tutupModal);
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        const active = document.querySelector('.modal-overlay.active');
+        if (active && active.id === 'modalForm') simpanMitra();
+    }
+});
+
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', (i === 0 && tab === 'mitra') || (i === 1 && tab === 'history'));
+    });
+    document.getElementById('tab-mitra').classList.toggle('active', tab === 'mitra');
+    document.getElementById('tab-history').classList.toggle('active', tab === 'history');
+    document.getElementById('mitraActions').style.display   = tab === 'mitra'   ? '' : 'none';
+    document.getElementById('historyActions').style.display = tab === 'history' ? '' : 'none';
+    if (tab === 'history') renderHistory();
+}
+
+// ============================================================
+// HISTORY SPPW
+// ============================================================
+function loadHistory() {
+    try {
+        return JSON.parse(localStorage.getItem('sppw_history') || '[]');
+    } catch(e) { return []; }
+}
+
+function renderHistory() {
+    const history = loadHistory();
+    const q = (document.getElementById('searchHistory').value || '').toLowerCase().trim();
+    const filterBulan = document.getElementById('filterBulan').value;
+    const tbody = document.getElementById('historyBody');
+    const empty = document.getElementById('historyEmpty');
+
+    // Populate bulan dropdown
+    const bulanSet = new Set();
+    history.forEach(h => {
+        if (h.createdAt) {
+            const d = new Date(h.createdAt);
+            const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+            bulanSet.add(key);
+        }
+    });
+    const sel = document.getElementById('filterBulan');
+    const currentVal = sel.value;
+    sel.innerHTML = '<option value="">\uD83D\uDCC5 Semua Bulan</option>';
+    [...bulanSet].sort().reverse().forEach(key => {
+        const [yr, mn] = key.split('-');
+        const label = new Date(yr, mn-1, 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+        sel.innerHTML += `<option value="${key}" ${currentVal===key?'selected':''}>${label}</option>`;
+    });
+
+    const filtered = history.filter(h => {
+        const matchQ = !q || (
+            (h.noSurat || '').toLowerCase().includes(q) ||
+            (h.mitra || '').toLowerCase().includes(q) ||
+            (h.customer || '').toLowerCase().includes(q) ||
+            (h.noSO || '').toLowerCase().includes(q)
+        );
+        const matchBulan = !filterBulan || (() => {
+            if (!h.createdAt) return false;
+            const d = new Date(h.createdAt);
+            const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+            return key === filterBulan;
+        })();
+        return matchQ && matchBulan;
+    });
+
+    // Stats
+    const now = new Date();
+    const bulanIni = history.filter(h => {
+        const d = new Date(h.createdAt);
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }).length;
+    document.getElementById('statHistory').textContent = history.length;
+    document.getElementById('statHistoryBulanIni').textContent = bulanIni;
+    document.getElementById('historyFooterInfo').textContent = (q || filterBulan)
+        ? `Menampilkan ${filtered.length} dari ${history.length} surat`
+        : `Total ${history.length} surat`;
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = '';
+        return;
+    }
+    empty.style.display = 'none';
+
+    // Show newest first
+    const sorted = [...filtered].reverse();
+
+    tbody.innerHTML = sorted.map((h, i) => {
+        const tgl = h.createdAt ? new Date(h.createdAt).toLocaleDateString('id-ID', {
+            day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) : '-';
+        const historyEncoded = encodeURIComponent(JSON.stringify(h));
+        return `<tr style="cursor:default">
+            <td class="td-no">${i + 1}</td>
+            <td class="td-tgl">${tgl}</td>
+            <td class="td-noSurat">${escHtml(h.noSurat || '-')}</td>
+            <td class="td-mitra">${escHtml(h.mitra || '-')}</td>
+            <td class="td-customer">${escHtml(h.customer || '-')}</td>
+            <td class="td-so">${escHtml(h.noSO || '-')}</td>
+            <td class="td-actions" style="display:flex;gap:6px;align-items:center;">
+                <button class="btn btn-outline btn-sm" onclick="bukaSurat('${historyEncoded}')" title="Buka surat" style="white-space:nowrap">📄 Buka</button>
+                <button class="btn btn-danger-outline btn-sm btn-icon" onclick="hapusHistory(${history.indexOf(h)})" title="Hapus">🗑️</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function bukaSurat(encoded) {
+    // Buka generator_sppw.html dengan data history via URL hash
+    window.location.href = 'generator_sppw.html#history=' + encoded;
+}
+
+function hapusHistory(idx) {
+    const history = loadHistory();
+    history.splice(idx, 1);
+    localStorage.setItem('sppw_history', JSON.stringify(history));
+    renderHistory();
+    toast('🗑️ Entry history dihapus.', 'success');
+}
+
+function hapusSemuaHistory() {
+    if (!confirm('Hapus semua history SPPW? Aksi ini tidak bisa dibatalkan.')) return;
+    localStorage.removeItem('sppw_history');
+    renderHistory();
+    toast('🗑️ Semua history berhasil dihapus.', 'success');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadMitra();
+renderTable();
+</script>
+</body>
+</html>
